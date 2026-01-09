@@ -624,11 +624,11 @@ cleanup_docker() {
 create_directories() {
     log_info "Creating necessary directories..."
     
-    mkdir -p "${HOME}/tmp/cowctl/minio"
-    mkdir -p exported-data
-    mkdir -p catalog/localcatalog
-    mkdir -p goose-config
-    mkdir -p "$GOOSE_SESSION_DIR"
+    mkdir -p "${HOME}/tmp/cowctl/minio" && chown -R "$(id -un)":"$(id -gn)" "${HOME}/tmp/cowctl/minio"
+    mkdir -p exported-data && chown -R "$(id -un)":"$(id -gn)" exported-data
+    mkdir -p catalog/localcatalog && chown -R "$(id -un)":"$(id -gn)" catalog/localcatalog
+    mkdir -p goose-config && chown -R "$(id -un)":"$(id -gn)" goose-config
+    mkdir -p "$GOOSE_SESSION_DIR" && chown -R "$(id -un)":"$(id -gn)" "$GOOSE_SESSION_DIR"
     
     log_success "Directories created"
     log_info "Goose sessions will persist in: $GOOSE_SESSION_DIR"
@@ -850,7 +850,7 @@ main() {
     check_minio_credentials
     check_ssl_certificates
     check_env_files
-    
+
     echo ""
     log_info "All pre-flight checks passed!"
     echo ""
@@ -877,7 +877,7 @@ main() {
     
     # Setup process
     cleanup_docker
-    create_directories
+    # create_directories
     build_services
     start_services
     wait_for_services
